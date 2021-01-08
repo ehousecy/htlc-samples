@@ -1,4 +1,4 @@
-module github.com/ehousecy/htlc-samples/chaincode/account-assert
+module github.com/ehousecy/htlc-samples/chaincode/htlc
 
 go 1.15
 

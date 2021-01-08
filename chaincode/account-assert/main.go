@@ -32,12 +32,12 @@ func (a *AccountAssert) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	key := fmt.Sprintf(AccountPrefix, InitAccountAddress)
 	initAccountInfo, err := json.Marshal(initAccount)
 	if err != nil {
-		return shim.Error("json marshal error: ", err.Error())
+		return shim.Error("json marshal error: " + err.Error())
 	}
 
 	err = stub.PutState(key, initAccountInfo)
 	if err != nil {
-		return shim.Error("put state error: ", err.Error())
+		return shim.Error("put state error: " + err.Error())
 	}
 
 	return shim.Success([]byte("Init Success"))
