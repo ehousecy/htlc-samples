@@ -25,6 +25,12 @@ function networkUp() {
     echo "ERROR !!!! Unable to start network"
     exit 1
   fi
+
+  docker exec cli scripts/script.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
+  if [ $? -ne 0 ]; then
+    echo "ERROR !!!! Test failed"
+    exit 1
+  fi
 }
 
 function networkDown() {
