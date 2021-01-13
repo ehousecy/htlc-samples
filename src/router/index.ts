@@ -1,22 +1,40 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../views/Home.vue'
+import Dashboard from '../views/Dashboard.vue'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    name: 'dashboard',
+    component: Dashboard,
+    children: [
+      {
+        path: '',
+        component: () => import(/* webpackChunkName: "Eth" */ '../views/eth/createHTLC.vue')
+      },
+      {
+        path: 'eth/withdraw',
+        component: () => import(/* webpackChunkName: "Eth" */ '../views/eth/withdraw.vue')
+      },
+      {
+        path: 'eth/refund',
+        component: () => import(/* webpackChunkName: "Eth" */ '../views/eth/refund.vue')
+      },
+      {
+        path: 'fabric',
+        component: () => import(/* webpackChunkName: "Fabric" */ '../views/Fabric.vue')
+      },
+      {
+        path: 'profile',
+        component: () => import(/* webpackChunkName: "Generatehash" */ '../views/Generatehash.vue')
+      },
+      {
+        path: 'apply',
+        component: () => import(/* webpackChunkName: "Applyaccount" */ '../views/Applyaccount.vue')
+      }
+    ]
   }
 ]
 
