@@ -34,8 +34,8 @@ func (h *HTLCChaincode) Invoke(stub shim.ChaincodeStubInterface) (res pb.Respons
 		res = h.create(stub, args)
 	case "createhash":
 		res = h.createHash(stub, args)
-	case "receive":
-		res = h.receive(stub, args)
+	case "withdraw":
+		res = h.withdraw(stub, args)
 	case "refund":
 		res = h.refund(stub, args)
 	case "queryhtlc":
@@ -223,7 +223,7 @@ func (h *HTLCChaincode) createHash(stub shim.ChaincodeStubInterface, args []stri
 	return shim.Success([]byte(id))
 }
 
-func (h *HTLCChaincode) receive(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (h *HTLCChaincode) withdraw(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 2 {
 		return shim.Error("argument is invalid")
 	}

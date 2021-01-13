@@ -24,7 +24,7 @@ const (
 	Func_HTLC_CreateMidAccount = "createmidaccount"
 	Func_HTLC_Create = "create"
 	Func_HTLC_CreateHash = "createhash"
-	Func_HTLC_Receive = "receive"
+	Func_HTLC_Withdraw = "withdraw"
 	Func_HTLC_Refund = "refund"
 	Func_HTLC_Query = "queryhtlc"
 )
@@ -52,7 +52,7 @@ func main() {
 	r.POST("/htlc/midaccount", htlcCreateMidAccount)
 	r.POST("/htlc/create", htlcCreate)
 	r.POST("/htlc/createbyhash", htlcCreateByHash)
-	r.POST("/htlc/receive", htlcReceive)
+	r.POST("/htlc/withdraw", htlcWithdraw)
 	r.POST("/htlc/refund", htlcRefund)
 	r.POST("/htlc/query", htlcQuery)
 
@@ -311,7 +311,7 @@ func htlcCreateByHash(contex *gin.Context) {
 	}
 }
 
-func htlcReceive(contex *gin.Context) {
+func htlcWithdraw(contex *gin.Context) {
 	var requestInfo map[string]interface{}
 	body := contex.Request.Body
 	bodyBytes, _ := ioutil.ReadAll(body)
@@ -330,7 +330,7 @@ func htlcReceive(contex *gin.Context) {
 	request.Peer = Peer
 	request.ChannelID = ChannelID
 	request.UserName = UserName
-	request.Function = Func_HTLC_Receive
+	request.Function = Func_HTLC_Withdraw
 
 
 	var htlc sdk.ReceiveHTLCArgs

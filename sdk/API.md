@@ -9,8 +9,8 @@
 **请求参数**：
 ```
 {
-	"address":"chenmx",
-	"passwd":"rootroot",
+	"address":"test",
+	"passwd":"passwd",
 	"flag":""
 }
 ```
@@ -33,7 +33,7 @@
 ```
 {
 	"from":"account-assert-genesis-account",
-	"to":"chenmx",
+	"to":"test",
 	"amount":"1000",
 	"passwd":"12345678"
 }
@@ -56,7 +56,7 @@
 **请求参数**：
 ```
 {
-	"address":"chenmx"
+	"address":"test"
 }
 ```
 
@@ -64,7 +64,7 @@
 ```
 {
     "data": {
-        "address": "chenmx",
+        "address": "test",
         "amount": 1000,
         "passwd": "0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18",
         "sequence": 0
@@ -82,8 +82,8 @@
 **请求参数**：
 ```
 {
-	"sender":"chenmx", // hash锁定发送者地址
-    "pre_image":"abc", // hash原像或者hash值
+    "sender":"test", // hash锁定发送者地址
+    "pre_image":"preimage", // hash原像或者hash值
     "flag":"", // 等于hash时，pre_image为hash值 
 }
 ```
@@ -105,13 +105,13 @@
 **请求参数**：
 ```
 {
-	"sender":"chenmx", // 发送者账户
-	"receiver":"lijie", // 接收者账户
+	"sender":"test", // 发送者账户
+	"receiver":"user", // 接收者账户
 	"amount":"20", // 转账金额
 	"ttl":"2000", // 有效时间
 	"pre_image":"abcqq", // hash原像
-	"passwd":"rootroot", // 发送者账户密码
-	"mid_address":"chenmx0" // 中间账户地址
+	"passwd":"passwd", // 发送者账户密码
+	"mid_address":"test0" // 中间账户地址
 }
 ```
 
@@ -132,13 +132,13 @@
 **请求参数**：
 ```
 {
-	"sender":"chenmx",
-	"receiver":"lijie",
+	"sender":"test",
+	"receiver":"user",
 	"amount":"20", 
 	"ttl":"2000", 
 	"hash":"6dba306801b676d7c8fc63350fa202be6b83106c2261432b876bb694b02f0ce9", 
 	"passwd":"rootroot", 
-	"mid_address":"chenmx0" 
+	"mid_address":"test0" 
 }
 ```
 
@@ -152,7 +152,7 @@
 
 ## 接收HTLC
 
-**url**: http://${ip}:9090/htlc/receive
+**url**: http://${ip}:9090/htlc/withdraw
 
 **请求方式**：POST
 
@@ -211,13 +211,13 @@
 ```
 {
     "data": {
-        "sender": "chenmx",
-        "receiver": "zhoujunjie",
+        "sender": "test",
+        "receiver": "user",
         "amount": 20,
         "hash_value": "6dba306801b676d7c8fc63350fa202be6b83106c2261432b876bb694b02f0ce9",
         "time_lock": 1610358829,
         "pre_image": "",
-        "lock_address": "chenmx0",
+        "lock_address": "test0",
         "state": 0
     },
     "msg": "succeed"
