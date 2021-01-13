@@ -88,3 +88,8 @@ type HTLC struct {
 	LockAddress string    `json:"lock_address"`
 	State       HTLCState `json:"state"`
 }
+
+type ResponseMidAccount struct {
+	Address string `json:"address"`
+	Hash string `json:"hash"`
+}

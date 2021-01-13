@@ -91,39 +91,15 @@
 **返回参数**：
 ```
 {
-    "data": "address", //中间账户地址
+    "data": {
+        "address":"test0",
+        "hash":"hash"
+    }
     "msg": "succeed"
 }
 ```
 
-## 创建HTLC(原像)
-
-**url**: http://${ip}:9090/htlc/create
-
-**请求方式**：POST
-
-**请求参数**：
-```
-{
-	"sender":"test", // 发送者账户
-	"receiver":"user", // 接收者账户
-	"amount":"20", // 转账金额
-	"ttl":"2000", // 有效时间
-	"pre_image":"abcqq", // hash原像
-	"passwd":"passwd", // 发送者账户密码
-	"mid_address":"test0" // 中间账户地址
-}
-```
-
-**返回参数**：
-```
-{
-    "data": "8b382860313d403bdbc82bf9a44732208a68b536b4e653ab1935ea0238c1a3cb",
-    "msg": "succeed"
-}
-```
-
-## 创建HTLC(Hash值)
+## 创建HTLC
 
 **url**: http://${ip}:9090/htlc/createbyhash
 

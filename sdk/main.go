@@ -211,8 +211,10 @@ func htlcCreateMidAccount(contex *gin.Context) {
 			"message": err.Error(),
 		})
 	} else {
+		respon := &sdk.ResponseMidAccount{}
+		json.Unmarshal(payload, respon)
 		contex.JSON(200, gin.H{
-			"data":string(payload),
+			"data":respon,
 			"msg":"succeed",
 		})
 	}
