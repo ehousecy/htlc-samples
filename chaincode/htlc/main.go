@@ -80,7 +80,20 @@ func (h *HTLCChaincode) createMidAccount(stub shim.ChaincodeStubInterface, args 
 		return shim.Error("craete htlc update sender account sequence error: " + resPonse.Message)
 	}
 
-	return shim.Success([]byte(midAddress))
+	respon := ResponseMidAccount{}
+	respon.Address = midAddress
+	if flag == "hash" {
+		respon.Hash = preImage
+	} else {
+		hashByte := sha256.Sum256([]byte(preImage))
+		respon.Hash = hex.EncodeToString(hashByte[:])
+	}
+
+	responByte, err := json.Marshal(respon)
+	if err != nil {
+		shim.Error(err.Error())
+	}
+	return shim.Success(responByte)
 }
 
 func (h *HTLCChaincode) create(stub shim.ChaincodeStubInterface, args []string) pb.Response {

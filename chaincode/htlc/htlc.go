@@ -25,3 +25,8 @@ type Account struct {
 	Passwd   string `json:"passwd"`
 	Sequence uint64 `json:"sequence"`
 }
+
+type ResponseMidAccount struct {
+	Address string `json:"address"`
+	Hash string `json:"hash"`
+}
