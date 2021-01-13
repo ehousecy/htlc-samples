@@ -22,7 +22,6 @@ const (
 	Func_Account_Transfer = "transfer"
 	Func_Account_Query = "query"
 	Func_HTLC_CreateMidAccount = "createmidaccount"
-	Func_HTLC_Create = "create"
 	Func_HTLC_CreateHash = "createhash"
 	Func_HTLC_Withdraw = "withdraw"
 	Func_HTLC_Refund = "refund"
@@ -50,7 +49,6 @@ func main() {
 	r.POST("/account/query", queryAccount)
 
 	r.POST("/htlc/midaccount", htlcCreateMidAccount)
-	r.POST("/htlc/create", htlcCreate)
 	r.POST("/htlc/createbyhash", htlcCreateByHash)
 	r.POST("/htlc/withdraw", htlcWithdraw)
 	r.POST("/htlc/refund", htlcRefund)
@@ -207,51 +205,6 @@ func htlcCreateMidAccount(contex *gin.Context) {
 	htlc.Flag = requestInfo["flag"].(string)
 
 	payload, err := sdk.CreateMidAccount(fabSDK, &request, htlc)
-	if err != nil {
-		contex.JSON(102, gin.H{
-			"data":nil,
-			"message": err.Error(),
-		})
-	} else {
-		contex.JSON(200, gin.H{
-			"data":string(payload),
-			"msg":"succeed",
-		})
-	}
-}
-
-func htlcCreate(contex *gin.Context) {
-	var requestInfo map[string]interface{}
-	body := contex.Request.Body
-	bodyBytes, _ := ioutil.ReadAll(body)
-	err := json.Unmarshal(bodyBytes, &requestInfo)
-	if err != nil {
-		contex.JSON(101, gin.H{
-			"data":nil,
-			"msg":"json unmarshal error " + err.Error(),
-		})
-		return
-	}
-
-	var request sdk.InvokeChainCodeRequest
-	request.OrgName = OrgName
-	request.ChaincodeID = ChainCodeID_HTLC
-	request.Peer = Peer
-	request.ChannelID = ChannelID
-	request.UserName = UserName
-	request.Function = Func_HTLC_Create
-
-	var htlc sdk.CreateHTLCArgs
-	htlc.Sender = requestInfo["sender"].(string)
-	htlc.Receiver = requestInfo["receiver"].(string)
-	htlc.Amount = requestInfo["amount"].(string)
-	htlc.TTL = requestInfo["ttl"].(string)
-	htlc.PreImage = requestInfo["pre_image"].(string)
-	htlc.Passwd = requestInfo["passwd"].(string)
-	htlc.MidAddress = requestInfo["mid_address"].(string)
-
-
-	payload, err := sdk.CreateHTLC(fabSDK, &request, htlc)
 	if err != nil {
 		contex.JSON(102, gin.H{
 			"data":nil,
