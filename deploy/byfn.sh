@@ -35,6 +35,14 @@ function networkUp() {
     exit 1
   fi
 
+  if [ ! -x './scripts/script.sh' ]; then
+    chmod +x './scripts/script.sh'
+  fi
+
+  if [ ! -x './scripts/utils.sh' ]; then
+    chmod +x './scripts/utils.sh'
+  fi
+
   docker exec cli scripts/script.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
   if [ $? -ne 0 ]; then
     echo "ERROR !!!! Test failed"
@@ -117,6 +125,10 @@ function generateChannelArtifacts() {
   echo "##########################################################"
   echo "CONSENSUS_TYPE="$CONSENSUS_TYPE
   set -x
+  
+  if [ ! -d "channel-artifacts" ]; then
+    mkdir channel-artifacts
+  fi
   
   configtxgen -profile TwoOrgsOrdererGenesis -channelID $SYS_CHANNEL -outputBlock ./channel-artifacts/genesis.block
   res=$?
