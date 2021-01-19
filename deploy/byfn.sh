@@ -1,5 +1,9 @@
 #!/bin/bash
 
+VERSION=1.4.9
+ARCH=$(echo "$(uname -s|tr '[:upper:]' '[:lower:]'|sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')")
+BINARY_FILE=hyperledger-fabric-${ARCH}-${VERSION}.tar.gz
+
 export FABRIC_CFG_PATH=${PWD}
 
 function printHelp() {
@@ -10,6 +14,11 @@ function printHelp() {
   echo "      - 'down' - clear the network with docker-compose down"
   echo "	byfn.sh up"
   echo "	byfn.sh down"
+}
+
+function installBinaries() {
+  curl -L --retry 5 --retry-delay 3 https://github.com/hyperledger/fabric/releases/download/v${VERSION}/${BINARY_FILE} | tar xz
+  export PATH=${PATH}:${PWD}/bin
 }
 
 function networkUp() {
@@ -72,8 +81,8 @@ function replacePrivateKey() {
 function generateCerts() {
   which cryptogen
   if [ "$?" -ne 0 ]; then
-    echo "cryptogen tool not found. exiting"
-    exit 1
+    echo "cryptogen tool not found. install Binaries"
+    installBinaries
   fi
   echo
   echo "##########################################################"
