@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	
+
 	"github.com/gin-gonic/gin"
 	"github.com/hyperledger/fabric-sdk-go/pkg/fabsdk"
-	
-	"github.com/ehousecy/htlc-samples/sdk/sdk"
+
+	"github.com/ehousecy/htlc-samples/htlc-fabric/sdk/sdk"
 )
 
 const (
