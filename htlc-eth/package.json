@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/billchen-818/htlc#readme",
   "devDependencies": {
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
     "web3": "^1.0.0-beta.37"
