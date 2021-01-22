@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "inittsc": "node_modules/.bin/tsc --init",
-    "test": "node_modules/.bin/ts-node src/service/testWF.ts"
+    "test": "node_modules/.bin/ts-node src/service/testWF.ts",
+    "transferFee": "node_modules/.bin/ts-node src/service/transferFee.ts"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,8 @@
   },
   "homepage": "https://github.com/billchen-818/htlc#readme",
   "devDependencies": {
+    "@types/microsoft__typescript-etw": "^0.1.1",
+    "@types/node": "^14.14.22",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "ts-node": "^9.1.1",
