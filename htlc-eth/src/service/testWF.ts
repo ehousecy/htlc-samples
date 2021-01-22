@@ -29,8 +29,9 @@ import {
 } from '../utils/Ifabric'
 
 let hashLock = '0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18'
-let expireTimestamp = Date.now() + 20000000000
-let preimageBytesHex = "0x726f6f74726f6f74000000000000000000000000000000000000000000000000"
+let expireDuration:number = 17000000000
+let expireTimestamp = Date.now() + expireDuration
+let preimageBytesHex = "0x726f6f74726f6f74"
 let preimage = "rootroot"
 
 async function QueryFabricAccount(address:string) { 
@@ -43,6 +44,11 @@ async function QueryFabricAccount(address:string) {
   console.log(add)
   return add == address
 }
+
+async function buyMeACoffee() { 
+  console.log(await faucet("asender", "1000"))
+}
+
 
 let midAccount = ""
 async function createFabricMidAccount() { 
@@ -62,10 +68,10 @@ async function createFabricMidAccount() {
 
 let fabricHTLCId = ""
 async function lockFabricAssets() {
-  let res = await createHTLC("asender", "areceiver", "0", "2000", hashLock, "passwd1", "asender0")
+  let res = await createHTLC("asender", "areceiver", "1000", (expireDuration * 1.5 ).toString(), hashLock, "passwd1", midAccount)
+  console.log("------Lock Fabric Assets Result------")
   console.log(res)
   fabricHTLCId = JSON.parse(JSON.stringify(res.data))
-  console.log("------Lock Fabric Assets Result------")
   console.log("fabricHTLC Id: ", fabricHTLCId)
   console.log("")
   console.log("")
@@ -74,7 +80,8 @@ async function lockFabricAssets() {
 
 
 async function withdrawFabricAsset() {
-  let res = await withdrawFabricAssets("de1c8e736ec6025fcbd73e59027dfb9c9b649de9233efb0257ca38a90e92d45c", preimage)
+  console.log("", fabricHTLCId)
+  let res = await withdrawFabricAssets(fabricHTLCId, preimage)
   console.log("------WithDraw Fabric Assets Result------")
   console.log(res)
   console.log("")
@@ -97,7 +104,7 @@ async function transferFee2Address2() {
 
 async function deploy() {
   let res = await deployHTLC()
-  console.log("------deploy eth htlc result------")
+  console.log("------Deploy Eth Htlc Result------")
   console.log(res)
   console.log("")
   console.log("")
@@ -106,8 +113,8 @@ async function deploy() {
 
 var htlcId:any
 async function lockEth() {
-    let res = await newHTLC(address2, "0x" + hashLock, expireTimestamp, '300000', address1)
-    console.log("------lock eth asset result------")
+    let res = await newHTLC(address2, "0x0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18", expireTimestamp, '1100000000000000000', address1)
+    console.log("------Lock Eth Asset Result------")
     console.log(res)
     let blockNum = res.blockNumber
     console.log(blockNum)
@@ -123,27 +130,32 @@ async function newHTLCEvent(fromBlock:string|number, toBlock:string|number) {
     let res = await queryNewHTLCEvent(fromBlock, toBlock)
     htlcId = res[0].returnValues.htlcId
     console.log("htlcId is:" + htlcId)
+    console.log("")
+    console.log("")
+    console.log("")
 }
 
 
 async function withdrawEth() {
     addWallet(privateKey2,address2)
     let res = await withdrawEthAssets(htlcId, preimageBytesHex, address2)
-    console.log("------withdraw Eth result------")
+    console.log("------Withdraw Eth Result------")
     console.log(res)
-    
+    console.log("")
+    console.log("")
+    console.log("")
 }
 
 
-
-
-async function testWf() { 
+async function testWf() {
   await createFabricMidAccount()
   await lockFabricAssets()
+  addTestWallet()
   await deploy()
   await lockEth()
   await withdrawEth()
   await withdrawFabricAsset()
 }
 
-testWf()
+// testWf()
+transferFee2Address2()
