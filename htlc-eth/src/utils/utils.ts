@@ -87,7 +87,7 @@ async function newHTLC(receiver: string, hashLock: string, timestamp: string | n
 	}
 }
 
-async function withdraw(htlcId:string, preimage:string, txSender:string) {
+async function withdrawEthAssets(htlcId:string, preimage:string, txSender:string) {
 	try {
 		return await myContract.methods.withdraw(htlcId,preimage).send({
 			from: txSender,
@@ -143,13 +143,12 @@ async function getTransactionFromBlock(txHash:string, blockNum:number) {
 	}
 }
 
-
 export {
 	addWallet,
 	feeTransfer,
 	deployHTLC,
 	newHTLC,
-	withdraw,
+	withdrawEthAssets,
 	getTransaction,
 	getTransactionFromBlock,
 	queryNewHTLCEvent,

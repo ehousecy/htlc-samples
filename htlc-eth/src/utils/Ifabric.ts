@@ -1,11 +1,32 @@
+import { throws } from "assert";
+import { ResponseDto } from "./responseDto/response"
+
 var rp = require('request-promise')
 let ip = "http://172.30.4.135:9090"
 
-async function createAccount(accountName:string, passwd:string) {
+async function sendRequest(options:any):Promise<ResponseDto<any>> {
+  let resp:ResponseDto<any>
+  try {
+    let res = await rp(options)
+    return resp = {
+      code: 200,
+      data: res.data,
+      err: null
+    }
+  } catch (error) {
+    return resp = {
+      code: 400,
+      data: error.stack,
+      err: error.message
+    }
+  }
+}
+
+async function createAccount(accountName:string, passwd:string):Promise<ResponseDto<any>> {
   let requestJsonBody = {
     "address": accountName,
     "passwd": passwd,
-	  "flag":""
+	  "flag": ""
   }
   var options = {
     method: 'POST',
@@ -13,14 +34,10 @@ async function createAccount(accountName:string, passwd:string) {
     body: requestJsonBody,
     json: true // Automatically parses the JSON string in the response
   };
-  try {
-    return await rp(options)
-  } catch (error) {
-    return error
-  }
+  return await sendRequest(options)
 }
 
-async function queryAccount(accountName:string) {
+async function queryAccount(accountName:string) : Promise<ResponseDto<any>> {
   let requestJsonBody = {
     "address": accountName
   }
@@ -30,16 +47,10 @@ async function queryAccount(accountName:string) {
     body: requestJsonBody,
     json: true // Automatically parses the JSON string in the response
   };
-
-  try {
-    return await rp(options)
-  } catch (error) {
-    return error
-  }
-      
+  return await sendRequest(options)    
 }
 
-async function createMidAccount(sender:string, preImage:string, flag:string) {
+async function createMidAccount(sender:string, preImage:string, flag:string):Promise<ResponseDto<any>> {
   let requestJsonBody = {
     "sender": sender,
     "pre_image": preImage,
@@ -51,15 +62,10 @@ async function createMidAccount(sender:string, preImage:string, flag:string) {
     body: requestJsonBody,
     json: true // Automatically parses the JSON string in the response
   };
-
-  try {
-    return await rp(options)
-  } catch (error) {
-    return error
-  }
+  return await sendRequest(options)
 }
 
-async function createHTLC(sender:string, receiver:string, amount:string, ttl:string, hash:string, passwd:string, mid_address:string) {
+async function createHTLC(sender:string, receiver:string, amount:string, ttl:string, hash:string, passwd:string, mid_address:string):Promise<ResponseDto<any>> {
   let requestJsonBody = {
     "sender": sender,
     "receiver": receiver,
@@ -76,15 +82,10 @@ async function createHTLC(sender:string, receiver:string, amount:string, ttl:str
     body: requestJsonBody,
     json: true // Automatically parses the JSON string in the response
   };
-
-  try {
-    return await rp(options)
-  } catch (error) {
-    return error
-  }
+  return await sendRequest(options)
 }
 
-async function withdraw(id:string, preImage:string) {
+async function withdrawFabricAssets(id:string, preImage:string):Promise<ResponseDto<any>> {
   let requestJsonBody = {
   	"id": id,
 	  "pre_image": preImage
@@ -96,15 +97,10 @@ async function withdraw(id:string, preImage:string) {
     body: requestJsonBody,
     json: true // Automatically parses the JSON string in the response
   };
-
-  try {
-    return await rp(options)
-  } catch (error) {
-    return error
-  }
+  return await sendRequest(options)
 }
 
-async function refund(id:string, preImage:string) {
+async function refund(id:string, preImage:string):Promise<ResponseDto<any>> {
   let requestJsonBody = {
   	"id": id,
 	  "pre_image": preImage
@@ -116,15 +112,10 @@ async function refund(id:string, preImage:string) {
     body: requestJsonBody,
     json: true // Automatically parses the JSON string in the response
   };
-
-  try {
-    return await rp(options)
-  } catch (error) {
-    return error
-  }
+  return await sendRequest(options)
 }
 
-async function QueryHTLC(id:string) {
+async function QueryHTLC(id:string):Promise<ResponseDto<any>> {
   let requestJsonBody = {
   	"id": id
   }
@@ -135,15 +126,10 @@ async function QueryHTLC(id:string) {
     body: requestJsonBody,
     json: true // Automatically parses the JSON string in the response
   };
-
-  try {
-    return await rp(options)
-  } catch (error) {
-    return error
-  }
+  return await sendRequest(options)
 }
 
-async function faucet(to:string, amount:string) { 
+async function faucet(to:string, amount:string):Promise<ResponseDto<any>> { 
   let requestJsonBody = {
     "from": "account-assert-genesis-account",
     "to": to,
@@ -157,25 +143,18 @@ async function faucet(to:string, amount:string) {
     body: requestJsonBody,
     json: true // Automatically parses the JSON string in the response
   };
-  try {
-    let res = await rp(options)
-    console.log(res)
-    return res  
-  } catch (error) {
-    console.log(error)
-  }
+  return await sendRequest(options)
 }
 
-// createAccount("qqa", "aabc")
-// createAccount("qqb", "babc")
-// queryAccount("qqa")
-// queryAccount("qqb")
-// faucet("qqa", "1000")
-// createMidAccount("qqa", "0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18", "hash")
-// createHTLC("qqa", "qqb", "100", "2000", "0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18", "aabc", "qqa0");
+createAccount("asadasdazqb", "babc")
+// queryAccount("zqa")
+// queryAccount("zqb")
+// faucet("zqa", "1000")
+// createMidAccount("zqa", "0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18", "hash")
+// createHTLC("zqa", "zqb", "100", "2000", "0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18", "aabc", "zqa0");
 // withdraw("8659f8056bfb94b143bd3f0fb36236862614eb303434fe5322dd9ab6715fbc6e", "rootroot")
-// queryAccount("qqa")
-// queryAccount("qqb")
+// queryAccount("zqa")
+// queryAccount("zqb")
 
 
 export { 
@@ -183,7 +162,7 @@ export {
   queryAccount,
   createMidAccount,
   createHTLC,
-  withdraw,
+  withdrawFabricAssets,
   refund,
   QueryHTLC,
   faucet
