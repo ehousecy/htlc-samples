@@ -18,7 +18,6 @@ function printHelp() {
 
 function installBinaries() {
   curl -L --retry 5 --retry-delay 3 https://github.com/hyperledger/fabric/releases/download/v${VERSION}/${BINARY_FILE} | tar xz
-  export PATH=${PATH}:${PWD}/bin
 }
 
 function networkUp() {
@@ -87,11 +86,11 @@ function replacePrivateKey() {
 }
 
 function generateCerts() {
-  which cryptogen
-  if [ "$?" -ne 0 ]; then
+  if [ ! -d "bin" ]; then
     echo "cryptogen tool not found. install Binaries"
     installBinaries
   fi
+  export PATH=${PATH}:${PWD}/bin
   echo
   echo "##########################################################"
   echo "##### Generate certificates using cryptogen tool #########"
@@ -114,11 +113,11 @@ function generateCerts() {
 }
 
 function generateChannelArtifacts() {
-  which configtxgen
-  if [ "$?" -ne 0 ]; then
-    echo "configtxgen tool not found. exiting"
-    exit 1
+  if [ ! -d "bin" ]; then
+    echo "configtxgen tool not found. install Binaries"
+    installBinaries
   fi
+  export PATH=${PATH}:${PWD}/bin
 
   echo "##########################################################"
   echo "#########  Generating Orderer Genesis block ##############"
@@ -184,7 +183,7 @@ CHANNEL_NAME="mychannel"
 COMPOSE_PROJECT_NAME="net"
 COMPOSE_FILE=docker-compose-cli.yaml
 LANGUAGE=golang
-IMAGETAG="latest"
+IMAGETAG="1.4.9"
 MODE=$1
 
 if [ "${MODE}" == "up" ]; then
