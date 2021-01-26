@@ -1,4 +1,12 @@
 #!/bin/bash
-NEWSTR=`echo ${GOPATH//\//\\\/}`
-OLDSTR='s/${GOPATH}/'
-sed -i $OLDSTR$NEWSTR/g config.yaml
+
+ARCH=$(uname -s | grep Darwin)
+if [ $ARCH == "Darwin" ]; then
+  NEWSTR=`echo ${GOPATH//\//\\\/}`
+  OLDSTR='s/${GOPATH}/'
+  sed -i "" $OLDSTR$NEWSTR/g config.yaml
+else
+  NEWSTR=`echo ${GOPATH//\//\\\/}`
+  OLDSTR='s/${GOPATH}/'
+  sed -i $OLDSTR$NEWSTR/g config.yaml
+fi
