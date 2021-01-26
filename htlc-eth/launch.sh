@@ -29,7 +29,7 @@ initDatadir() {
 
 startNode() {
     enterDatadir
-    ./geth --rpc --rpcport "8545" --rpccorsdomain "*" --datadir "./data0" --port "30303"  --networkid 100000 \
+    ./geth --rpc --rpcport "8548" --rpccorsdomain "*" --datadir "./data0" --port "30303"  --networkid 100000 \
     --allow-insecure-unlock --etherbase 0x93ee701C44f9aa98086685c3AC5810f79762202d  \
     --mine --minerthreads=8 console
 }

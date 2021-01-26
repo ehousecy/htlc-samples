@@ -29,7 +29,7 @@ import {
 } from '../utils/Ifabric'
 
 let hashLock = '0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18'
-let expireDuration:number = 17000000000
+let expireDuration:number = 20000000000
 let expireTimestamp = Date.now() + expireDuration
 let preimageBytesHex = "0x726f6f74726f6f74"
 let preimage = "rootroot"
@@ -68,7 +68,8 @@ async function createFabricMidAccount() {
 
 let fabricHTLCId = ""
 async function lockFabricAssets() {
-  let res = await createHTLC("asender", "areceiver", "1000", (expireDuration * 1.5 ).toString(), hashLock, "passwd1", midAccount)
+  console.log(midAccount)
+  let res = await createHTLC("asender", "areceiver", "10", (expireDuration * 1.5 ).toString(), hashLock, "passwd1", midAccount)
   console.log("------Lock Fabric Assets Result------")
   console.log(res)
   fabricHTLCId = JSON.parse(JSON.stringify(res.data))
@@ -157,5 +158,5 @@ async function testWf() {
   await withdrawFabricAsset()
 }
 
-// testWf()
-transferFee2Address2()
+testWf()
+// transferFee2Address2()
