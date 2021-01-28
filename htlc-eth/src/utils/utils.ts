@@ -88,7 +88,6 @@ async function newHTLC(receiver: string, hashLock: string, timestamp: string | n
 }
 
 async function withdrawEthAssets(htlcId: string, preimage: string, txSender: string) {
-	myContract = new web3.eth.Contract(htlcAbi, "0x73618A82fff14b49c5A100F5D4a85ab32d7D3aD1")
 	try {
 		return await myContract.methods.withdraw(htlcId,preimage).send({
 			from: txSender,
