@@ -32,7 +32,7 @@ function addWallet(privateKey:string, address:string) {
 
 async function feeTransfer() {
 	try {
-		let val= web3.utils.toWei(web3.utils.toBN(1))
+		let val = web3.utils.toWei(web3.utils.toBN(1))
 
 		return await web3.eth.sendTransaction({
 			from: address1,
