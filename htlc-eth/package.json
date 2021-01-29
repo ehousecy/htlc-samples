@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "inittsc": "node_modules/.bin/tsc --init",
-    "test": "node_modules/.bin/ts-node src/service/testWF.ts",
     "transferFee": "node_modules/.bin/ts-node src/service/transferFee.ts"
   },
   "repository": {

@@ -155,14 +155,14 @@ async function withdrawEth() {
 
 
 async function testWf() {
-  await buyMeACoffee()
-  await createFabricMidAccount()
-  await lockFabricAssets()
-  addTestWallet()
-  await deploy()
-  await lockEth()
+  // await buyMeACoffee()
+  // await createFabricMidAccount()
+  // await lockFabricAssets()
+  // addTestWallet()
+  // await deploy()
+  // await lockEth()
   await withdrawEth()
-  await withdrawFabricAsset()
+  // await withdrawFabricAsset()
 }
 
 testWf()

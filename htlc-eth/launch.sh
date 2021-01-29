@@ -48,11 +48,10 @@ setupEnv() {
 }
 
 
-runHTLC() {
+transferFee() {
     #  sleep 15 seconds to allow coinbase mined some blocks and get a few ETH
     sleep 15
     npm run transferFee
-    npm run test
 }
 
 MODE=$1
@@ -61,7 +60,7 @@ if [ "${MODE}" == "download" ]; then
   initDatadir
 elif [ "${MODE}" == "start" ]; then
   startNode
-elif [ "${MODE}" == "run" ]; then
+elif [ "${MODE}" == "feeTransfer" ]; then
   setupEnv
-  runHTLC
+  transferFee
 fi
