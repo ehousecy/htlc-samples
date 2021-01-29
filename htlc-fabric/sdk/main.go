@@ -81,7 +81,6 @@ func createAccount(contex *gin.Context) {
 	var account sdk.CreateAccountArgs
 	account.Address = requestInfo["address"].(string)
 	account.PassWD = requestInfo["passwd"].(string)
-	account.Flag = requestInfo["flag"].(string)
 
 	payload, err := sdk.RegisterAccount(fabSDK, &request, account)
 	if err != nil {
@@ -203,6 +202,7 @@ func htlcCreateMidAccount(contex *gin.Context) {
 	htlc.Sender = requestInfo["sender"].(string)
 	htlc.PreImage = requestInfo["pre_image"].(string)
 	htlc.Flag = requestInfo["flag"].(string)
+	htlc.Receiver = requestInfo["receiver"].(string)
 
 	payload, err := sdk.CreateMidAccount(fabSDK, &request, htlc)
 	if err != nil {

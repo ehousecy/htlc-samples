@@ -27,6 +27,9 @@ func (a *AccountAssert) Init(stub shim.ChaincodeStubInterface) pb.Response {
 		Address: InitAccountAddress,
 		Passwd:  hex.EncodeToString(pass[:]),
 		Amount:  uint64(InitAccountToken),
+		Sequence: 0,
+		Type: GenAccount,
+		TransferTo: [2]string{},
 	}
 
 	key := fmt.Sprintf(AccountPrefix, InitAccountAddress)
@@ -52,6 +55,8 @@ func (a *AccountAssert) Invoke(stub shim.ChaincodeStubInterface) (res pb.Respons
 
 	fn, args := stub.GetFunctionAndParameters()
 	switch fn {
+	case "registermidaccount":
+		res = a.createMidAccount(stub, args)
 	case "register":
 		res = a.createAccount(stub, args)
 	case "transfer":
@@ -67,14 +72,20 @@ func (a *AccountAssert) Invoke(stub shim.ChaincodeStubInterface) (res pb.Respons
 	return
 }
 
-func (a *AccountAssert) createAccount(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) < 3 {
+func (a *AccountAssert) createMidAccount(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	if len(args) < 5 {
 		return shim.Error("arguments is invalid")
 	}
 
-	address := args[0]
-	key := fmt.Sprintf(AccountPrefix, address)
+	var pw string
 
+	address := args[0]
+	passwd := args[1]
+	flag := args[2]
+	sender := args[3]
+	receiver := args[4]
+
+	key := fmt.Sprintf(AccountPrefix, address)
 	accByte, err := stub.GetState(key)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -83,9 +94,6 @@ func (a *AccountAssert) createAccount(stub shim.ChaincodeStubInterface, args []s
 		return shim.Error("account is exist")
 	}
 
-	passwd := args[1]
-	flag := args[2]
-	var pw string
 	if flag == "hash" {
 		pw = passwd
 	} else {
@@ -93,20 +101,61 @@ func (a *AccountAssert) createAccount(stub shim.ChaincodeStubInterface, args []s
 		pw = hex.EncodeToString(sha256Passwd[:])
 	}
 
+	transferTo := [2]string{sender, receiver}
 	acc := Account{
 		Address:  address,
 		Amount:   0,
 		Passwd:   pw,
 		Sequence: 0,
+		Type: MidAccount,
+		TransferTo: transferTo,
+	}
+	if accByte, err = json.Marshal(acc); err != nil {
+		return shim.Error(err.Error())
 	}
 
-	accByte, err = json.Marshal(acc)
+	if err = stub.PutState(key, accByte); err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success([]byte("success create mid account"))
+}
+
+func (a *AccountAssert) createAccount(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	if len(args) < 2 {
+		return shim.Error("arguments is invalid")
+	}
+
+	address := args[0]
+	key := fmt.Sprintf(AccountPrefix, address)
+	accByte, err := stub.GetState(key)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
-	err = stub.PutState(key, accByte)
-	if err != nil {
+	if accByte != nil {
+		return shim.Error("account is exist")
+	}
+
+	passwd := args[1]
+	sha256Passwd := sha256.Sum256([]byte(passwd))
+
+	acc := Account{
+		Address:  address,
+		Amount:   0,
+		Passwd:   hex.EncodeToString(sha256Passwd[:]),
+		Sequence: 0,
+		Type: GenAccount,
+		TransferTo: [2]string{},
+	}
+
+	if accByte, err = json.Marshal(acc); err != nil {
+		return shim.Error(err.Error())
+	}
+
+	fmt.Println("account: ", string(accByte))
+
+	if err = stub.PutState(key, accByte); err != nil {
 		return shim.Error(err.Error())
 	}
 
@@ -166,10 +215,17 @@ func (a *AccountAssert) transfer(stub shim.ChaincodeStubInterface, args []string
 		return shim.Error("account amount is small")
 	}
 
+	if sender.Type == MidAccount {
+		if sender.TransferTo[0] != to && sender.TransferTo[1] != to {
+			return shim.Error("mid account not can transfer to other account")
+		}
+	}
+
 	err = sender.Transfer(stub, receiver, amount)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
+
 	return shim.Success([]byte("Transfer Success"))
 }
 

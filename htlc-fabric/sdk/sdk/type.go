@@ -12,7 +12,6 @@ type InvokeChainCodeRequest struct {
 type CreateAccountArgs struct {
 	Address string `json:"address"`
 	PassWD  string `json:"pass_wd"`
-	Flag    string `json:"flag"`
 }
 
 type TransferArgs struct {
@@ -26,6 +25,7 @@ type CreateMidAccountArgs struct {
 	Sender string `json:"sender"`
 	PreImage string `json:"pre_image"`
 	Flag string `json:"flag"`
+	Receiver string `json:"receiver"`
 }
 
 type CreateHTLCArgs struct {
@@ -68,6 +68,8 @@ type Account struct {
 	Amount uint64 `json:"amount"`
 	Passwd string `json:"passwd"`
 	Sequence uint64 `json:"sequence"`
+	Type int `json:"type"`
+	TransferTo []string `json:"transfer_to"`
 }
 
 type HTLCState int

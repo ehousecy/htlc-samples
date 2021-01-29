@@ -3,12 +3,7 @@ package sdk
 import "github.com/hyperledger/fabric-sdk-go/pkg/fabsdk"
 
 func CreateMidAccount(fab *fabsdk.FabricSDK, request *InvokeChainCodeRequest, htlc CreateMidAccountArgs) ([]byte, error) {
-	args := packArgs([]string{htlc.Sender, htlc.PreImage, htlc.Flag})
-	return invoke(fab, request, args)
-}
-
-func CreateHTLC(fab *fabsdk.FabricSDK, request *InvokeChainCodeRequest, htlc CreateHTLCArgs) ([]byte, error) {
-	args := packArgs([]string{htlc.Sender, htlc.Receiver, htlc.Amount, htlc.TTL, htlc.PreImage, htlc.Passwd, htlc.MidAddress})
+	args := packArgs([]string{htlc.Sender, htlc.PreImage, htlc.Flag, htlc.Receiver})
 	return invoke(fab, request, args)
 }
 

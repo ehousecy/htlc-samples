@@ -8,7 +8,6 @@ import (
 )
 
 func invoke(fab *fabsdk.FabricSDK, request *InvokeChainCodeRequest, args [][]byte) ([]byte, error) {
-
 	req := channel.Request{
 		ChaincodeID: request.ChaincodeID,
 		Fcn:         request.Function,

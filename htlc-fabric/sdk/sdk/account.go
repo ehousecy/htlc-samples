@@ -3,7 +3,7 @@ package sdk
 import "github.com/hyperledger/fabric-sdk-go/pkg/fabsdk"
 
 func RegisterAccount(fab *fabsdk.FabricSDK, request *InvokeChainCodeRequest, account CreateAccountArgs) ([]byte, error) {
-	args := packArgs([]string{account.Address, account.PassWD, account.Flag})
+	args := packArgs([]string{account.Address, account.PassWD})
 	return invoke(fab, request, args)
 }
 

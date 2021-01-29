@@ -8,11 +8,18 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
+const (
+	MidAccount = 0
+	GenAccount = 1
+)
+
 type Account struct {
 	Address  string `json:"address"`
 	Amount   uint64 `json:"amount"`
 	Passwd   string `json:"passwd"`
 	Sequence uint64 `json:"sequence"`
+	Type     int `json:"type"`
+	TransferTo [2]string `json:"transfer_to"`
 }
 
 func (a *Account) Transfer(stub shim.ChaincodeStubInterface, to *Account, amount uint64) error {

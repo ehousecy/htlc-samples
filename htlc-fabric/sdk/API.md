@@ -10,8 +10,7 @@
 ```
 {
 	"address":"test",
-	"passwd":"passwd",
-	"flag":""
+	"passwd":"passwd"
 }
 ```
 
@@ -67,7 +66,9 @@
         "address": "test",
         "amount": 1000,
         "passwd": "0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18",
-        "sequence": 0
+        "sequence": 0,
+        "type": 0,
+        "transfer_to": []
     },
     "msg": "succeed"
 }
@@ -85,6 +86,7 @@
     "sender":"test", // hash锁定发送者地址
     "pre_image":"preimage", // hash原像或者hash值
     "flag":"", // 等于hash时，pre_image为hash值 
+    "receiver":"receiver"
 }
 ```
 

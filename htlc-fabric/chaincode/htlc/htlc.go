@@ -24,6 +24,8 @@ type Account struct {
 	Amount   uint64 `json:"amount"`
 	Passwd   string `json:"passwd"`
 	Sequence uint64 `json:"sequence"`
+	Type     uint8 `json:"type"`
+	TransferTo []string `json:"transfer_to"`
 }
 
 type ResponseMidAccount struct {
