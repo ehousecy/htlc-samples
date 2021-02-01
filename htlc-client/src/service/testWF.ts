@@ -58,7 +58,7 @@ async function buyMeACoffee() {
 
 let midAccount = ""
 async function createFabricMidAccount() { 
-  let res = await createMidAccount(senderAccount, hashLock, "hash")
+  let res = await createMidAccount(senderAccount, receiverAccount, hashLock, "hash")
   midAccount = JSON.parse(JSON.stringify(res.data)).address
   if (midAccount == '') {
     console.log("中间账户创建失败")
@@ -126,15 +126,18 @@ async function lockEth() {
     let blockNum = res.blockNumber
     console.log(blockNum)
     await newHTLCEvent(blockNum, blockNum)
+    console.log(res.events.LogHTLCNew.returnValues.htlcId)
+    htlcId = res.events.LogHTLCNew.returnValues.htlcId
+    console.log(res)
     console.log("")
     console.log("")
     console.log("")
-
 }
 
 
 async function newHTLCEvent(fromBlock:string|number, toBlock:string|number) {
-    let res = await queryNewHTLCEvent(fromBlock, toBlock)
+  let res = await queryNewHTLCEvent(fromBlock, toBlock)
+  console.log(res)
     htlcId = res[0].returnValues.htlcId
     console.log("htlcId is:" + htlcId)
     console.log("")
@@ -147,10 +150,20 @@ async function withdrawEth() {
     addWallet(privateKey2, address2)
     let res = await withdrawEthAssets(htlcId, preimageBytesHex, address2)
     console.log("------Withdraw Eth Result------")
-    console.log(res)
+  console.log(res.events.LogHTLCWithdraw.returnValues.htlcId)
+  if (!res.events.LogHTLCWithdraw.returnValues.htlcId == null) { 
+    console.log("提取ETH失败")
+    process.exit(1)
+  }
     console.log("")
     console.log("")
-    console.log("")
+  console.log("")
+  res = await getContract(htlcId, address1)
+  if (res.withdrawn == true) {
+    console.log("提取ETH成功")
+  } else { 
+    console.log("尚未提币")
+  }
 }
 
 
@@ -158,12 +171,11 @@ async function testWf() {
   // await buyMeACoffee()
   // await createFabricMidAccount()
   // await lockFabricAssets()
-  // addTestWallet()
-  // await deploy()
-  // await lockEth()
-  await withdrawEth()
+  addTestWallet()
+  await deploy()
+  await lockEth()
+  // await withdrawEth()
   // await withdrawFabricAsset()
 }
 
 testWf()
-// transferFee2Address2()

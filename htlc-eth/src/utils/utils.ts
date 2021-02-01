@@ -1,6 +1,7 @@
 import {htlcAbi, htlcCode} from './htlcContractInfo'
 import {node1} from './nodeList'
 import { address1,address2,address3,privateKey1,privateKey2,privateKey3 } from "./accountList"
+import { time } from 'console'
 
 var Web3 = require('web3')
 var web3 = new Web3(node1)
@@ -103,12 +104,9 @@ async function withdrawEthAssets(htlcId: string, preimage: string, txSender: str
 async function queryNewHTLCEvent(_fromBlock:number|string, _toBlock:number|string) {
 
 	try {
-		// return await web3.eth.subscribe('logs', {
-		// 	    address: htlcAddress,
-		// 		topics: ['0x329a8316ed9c3b2299597538371c2944c5026574e803b1ec31d6113e1cd67bde']
-		// 		// topics: ['0xf17b7acef69403e04f4805870de1bd35ed0d8ae19aee05daf76881128594bda2']
-		// })
-
+		
+		console.log("fromBlock: ", _fromBlock)
+		console.log("toBlock: ", _toBlock)
 		return await myContract.getPastEvents('LogHTLCNew', {
 			fromBlock: _fromBlock,
 			toBlock: _toBlock

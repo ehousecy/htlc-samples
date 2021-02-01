@@ -1,3 +1,4 @@
+import { receiveMessageOnPort } from "worker_threads"
 import { ResponseDto } from "./responseDto/response"
 
 var rp = require('request-promise')
@@ -24,8 +25,7 @@ async function sendRequest(options:any):Promise<ResponseDto<any>> {
 async function createAccount(accountName:string, passwd:string):Promise<ResponseDto<any>> {
   let requestJsonBody = {
     "address": accountName,
-    "passwd": passwd,
-	  "flag": ""
+    "passwd": passwd
   }
   var options = {
     method: 'POST',
@@ -49,9 +49,10 @@ async function queryAccount(accountName:string) : Promise<ResponseDto<any>> {
   return await sendRequest(options)    
 }
 
-async function createMidAccount(sender:string, preImage:string, flag:string):Promise<ResponseDto<any>> {
+async function createMidAccount(sender:string, receiver:string, preImage:string, flag:string):Promise<ResponseDto<any>> {
   let requestJsonBody = {
     "sender": sender,
+    "receiver": receiver,
     "pre_image": preImage,
     "flag": flag
   }

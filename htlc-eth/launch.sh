@@ -18,7 +18,7 @@ download() {
 
 enterDatadir() {
     dir=geth-${ARCH}-${VERSION}
-    echo ${dir}
+    echo "Data Directory is: ${dir}"
     cd ${dir}
 }
 
@@ -49,8 +49,6 @@ setupEnv() {
 
 
 transferFee() {
-    #  sleep 15 seconds to allow coinbase mined some blocks and get a few ETH
-    sleep 15
     npm run transferFee
 }
 
