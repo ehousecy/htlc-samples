@@ -9,3 +9,4 @@ htlc-fabric/deploy/crypto-config/
 htlc-fabric/sdk/fabricsdk
 htlc-fabric/sdk/go.sum
 htlc-fabric/sdk/nohup.out
+htlc-fabric/sdk/config.yaml
