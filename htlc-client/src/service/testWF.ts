@@ -55,6 +55,10 @@ async function buyMeACoffee() {
   console.log(await faucet(senderAccount, "1000"))
 }
 
+async function createFabricTestAcc() {
+  console.log(await createAccount(senderAccount, senderPasswd))
+  console.log(await createAccount(receiverAccount, receiverPasswd))
+}
 
 let midAccount = ""
 async function createFabricMidAccount() { 
@@ -168,12 +172,13 @@ async function withdrawEth() {
 
 
 async function testWf() {
-  // await buyMeACoffee()
+    await createFabricTestAcc()
+    await buyMeACoffee()
   // await createFabricMidAccount()
   // await lockFabricAssets()
-  addTestWallet()
-  await deploy()
-  await lockEth()
+  // addTestWallet()
+  // await deploy()
+  // await lockEth()
   // await withdrawEth()
   // await withdrawFabricAsset()
 }

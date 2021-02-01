@@ -2,7 +2,8 @@ import { receiveMessageOnPort } from "worker_threads"
 import { ResponseDto } from "./responseDto/response"
 
 var rp = require('request-promise')
-let ip = "http://172.30.4.135:9090"
+// let ip = "http://172.30.4.135:9090"
+let ip = "http://127.0.0.1:9191"
 
 async function sendRequest(options:any):Promise<ResponseDto<any>> {
   let resp:ResponseDto<any>
