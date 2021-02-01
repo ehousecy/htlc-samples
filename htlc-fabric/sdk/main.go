@@ -11,21 +11,21 @@ import (
 )
 
 const (
-	OrgName = "Org1"
-	ChannelID = "mychannel"
+	OrgName             = "Org1"
+	ChannelID           = "mychannel"
 	ChainCodeID_Account = "account"
-	ChainCodeID_HTLC = "htlc"
-	Peer = "peer0.org1.example.com"
-	UserName = "Admin"
+	ChainCodeID_HTLC    = "htlc"
+	Peer                = "peer0.org1.example.com"
+	UserName            = "Admin"
 
-	Func_Account_Register = "register"
-	Func_Account_Transfer = "transfer"
-	Func_Account_Query = "query"
+	Func_Account_Register      = "register"
+	Func_Account_Transfer      = "transfer"
+	Func_Account_Query         = "query"
 	Func_HTLC_CreateMidAccount = "createmidaccount"
-	Func_HTLC_CreateHash = "createhash"
-	Func_HTLC_Withdraw = "withdraw"
-	Func_HTLC_Refund = "refund"
-	Func_HTLC_Query = "queryhtlc"
+	Func_HTLC_CreateHash       = "createhash"
+	Func_HTLC_Withdraw         = "withdraw"
+	Func_HTLC_Refund           = "refund"
+	Func_HTLC_Query            = "queryhtlc"
 )
 
 var (
@@ -54,7 +54,7 @@ func main() {
 	r.POST("/htlc/refund", htlcRefund)
 	r.POST("/htlc/query", htlcQuery)
 
-	r.Run(":9090")
+	r.Run(":9191")
 }
 
 func createAccount(contex *gin.Context) {
@@ -64,8 +64,8 @@ func createAccount(contex *gin.Context) {
 	err := json.Unmarshal(bodyBytes, &requestInfo)
 	if err != nil {
 		contex.JSON(101, gin.H{
-			"data":nil,
-			"msg":"json unmarshal error " + err.Error(),
+			"data": nil,
+			"msg":  "json unmarshal error " + err.Error(),
 		})
 		return
 	}
@@ -85,13 +85,13 @@ func createAccount(contex *gin.Context) {
 	payload, err := sdk.RegisterAccount(fabSDK, &request, account)
 	if err != nil {
 		contex.JSON(102, gin.H{
-			"data":nil,
+			"data":    nil,
 			"message": err.Error(),
 		})
 	} else {
 		contex.JSON(200, gin.H{
-			"data":string(payload),
-			"msg":"succeed",
+			"data": string(payload),
+			"msg":  "succeed",
 		})
 	}
 }
@@ -103,8 +103,8 @@ func transfer(contex *gin.Context) {
 	err := json.Unmarshal(bodyBytes, &requestInfo)
 	if err != nil {
 		contex.JSON(101, gin.H{
-			"data":nil,
-			"msg":"json unmarshal error " + err.Error(),
+			"data": nil,
+			"msg":  "json unmarshal error " + err.Error(),
 		})
 		return
 	}
@@ -126,13 +126,13 @@ func transfer(contex *gin.Context) {
 	payload, err := sdk.Transfer(fabSDK, &request, account)
 	if err != nil {
 		contex.JSON(102, gin.H{
-			"data":nil,
+			"data":    nil,
 			"message": err.Error(),
 		})
 	} else {
 		contex.JSON(200, gin.H{
-			"data":string(payload),
-			"msg":"succeed",
+			"data": string(payload),
+			"msg":  "succeed",
 		})
 	}
 }
@@ -144,8 +144,8 @@ func queryAccount(contex *gin.Context) {
 	err := json.Unmarshal(bodyBytes, &requestInfo)
 	if err != nil {
 		contex.JSON(101, gin.H{
-			"data":nil,
-			"msg":"json unmarshal error " + err.Error(),
+			"data": nil,
+			"msg":  "json unmarshal error " + err.Error(),
 		})
 		return
 	}
@@ -158,21 +158,20 @@ func queryAccount(contex *gin.Context) {
 	request.UserName = UserName
 	request.Function = Func_Account_Query
 
-
 	address := requestInfo["address"].(string)
 
 	payload, err := sdk.Query(fabSDK, &request, address)
 	if err != nil {
 		contex.JSON(102, gin.H{
-			"data":nil,
+			"data":    nil,
 			"message": err.Error(),
 		})
 	} else {
 		acc := &sdk.Account{}
 		json.Unmarshal(payload, acc)
 		contex.JSON(200, gin.H{
-			"data":acc,
-			"msg":"succeed",
+			"data": acc,
+			"msg":  "succeed",
 		})
 	}
 }
@@ -184,8 +183,8 @@ func htlcCreateMidAccount(contex *gin.Context) {
 	err := json.Unmarshal(bodyBytes, &requestInfo)
 	if err != nil {
 		contex.JSON(101, gin.H{
-			"data":nil,
-			"msg":"json unmarshal error " + err.Error(),
+			"data": nil,
+			"msg":  "json unmarshal error " + err.Error(),
 		})
 		return
 	}
@@ -207,15 +206,15 @@ func htlcCreateMidAccount(contex *gin.Context) {
 	payload, err := sdk.CreateMidAccount(fabSDK, &request, htlc)
 	if err != nil {
 		contex.JSON(102, gin.H{
-			"data":nil,
+			"data":    nil,
 			"message": err.Error(),
 		})
 	} else {
 		respon := &sdk.ResponseMidAccount{}
 		json.Unmarshal(payload, respon)
 		contex.JSON(200, gin.H{
-			"data":respon,
-			"msg":"succeed",
+			"data": respon,
+			"msg":  "succeed",
 		})
 	}
 }
@@ -227,8 +226,8 @@ func htlcCreateByHash(contex *gin.Context) {
 	err := json.Unmarshal(bodyBytes, &requestInfo)
 	if err != nil {
 		contex.JSON(101, gin.H{
-			"data":nil,
-			"msg":"json unmarshal error " + err.Error(),
+			"data": nil,
+			"msg":  "json unmarshal error " + err.Error(),
 		})
 		return
 	}
@@ -241,7 +240,6 @@ func htlcCreateByHash(contex *gin.Context) {
 	request.UserName = UserName
 	request.Function = Func_HTLC_CreateHash
 
-
 	var htlc sdk.CreateHTLBHashArgs
 	htlc.Sender = requestInfo["sender"].(string)
 	htlc.Receiver = requestInfo["receiver"].(string)
@@ -251,17 +249,16 @@ func htlcCreateByHash(contex *gin.Context) {
 	htlc.Passwd = requestInfo["passwd"].(string)
 	htlc.MidAddress = requestInfo["mid_address"].(string)
 
-
 	payload, err := sdk.CreateHTLCByHash(fabSDK, &request, htlc)
 	if err != nil {
 		contex.JSON(102, gin.H{
-			"data":nil,
+			"data":    nil,
 			"message": err.Error(),
 		})
 	} else {
 		contex.JSON(200, gin.H{
-			"data":string(payload),
-			"msg":"succeed",
+			"data": string(payload),
+			"msg":  "succeed",
 		})
 	}
 }
@@ -273,8 +270,8 @@ func htlcWithdraw(contex *gin.Context) {
 	err := json.Unmarshal(bodyBytes, &requestInfo)
 	if err != nil {
 		contex.JSON(101, gin.H{
-			"data":nil,
-			"msg":"json unmarshal error " + err.Error(),
+			"data": nil,
+			"msg":  "json unmarshal error " + err.Error(),
 		})
 		return
 	}
@@ -287,22 +284,20 @@ func htlcWithdraw(contex *gin.Context) {
 	request.UserName = UserName
 	request.Function = Func_HTLC_Withdraw
 
-
 	var htlc sdk.ReceiveHTLCArgs
 	htlc.ID = requestInfo["id"].(string)
 	htlc.PreImage = requestInfo["pre_image"].(string)
 
-
 	payload, err := sdk.ReceiveHTLC(fabSDK, &request, htlc)
 	if err != nil {
 		contex.JSON(102, gin.H{
-			"data":nil,
+			"data":    nil,
 			"message": err.Error(),
 		})
 	} else {
 		contex.JSON(200, gin.H{
-			"data":string(payload),
-			"msg":"succeed",
+			"data": string(payload),
+			"msg":  "succeed",
 		})
 	}
 }
@@ -314,8 +309,8 @@ func htlcRefund(contex *gin.Context) {
 	err := json.Unmarshal(bodyBytes, &requestInfo)
 	if err != nil {
 		contex.JSON(101, gin.H{
-			"data":nil,
-			"msg":"json unmarshal error " + err.Error(),
+			"data": nil,
+			"msg":  "json unmarshal error " + err.Error(),
 		})
 		return
 	}
@@ -328,7 +323,6 @@ func htlcRefund(contex *gin.Context) {
 	request.UserName = UserName
 	request.Function = Func_HTLC_Refund
 
-
 	var htlc sdk.RefundHTLCArgs
 	htlc.ID = requestInfo["id"].(string)
 	htlc.PreImage = requestInfo["pre_image"].(string)
@@ -336,13 +330,13 @@ func htlcRefund(contex *gin.Context) {
 	payload, err := sdk.RefundHTLC(fabSDK, &request, htlc)
 	if err != nil {
 		contex.JSON(102, gin.H{
-			"data":nil,
+			"data":    nil,
 			"message": err.Error(),
 		})
 	} else {
 		contex.JSON(200, gin.H{
-			"data":string(payload),
-			"msg":"succeed",
+			"data": string(payload),
+			"msg":  "succeed",
 		})
 	}
 }
@@ -354,8 +348,8 @@ func htlcQuery(contex *gin.Context) {
 	err := json.Unmarshal(bodyBytes, &requestInfo)
 	if err != nil {
 		contex.JSON(101, gin.H{
-			"data":nil,
-			"msg":"json unmarshal error " + err.Error(),
+			"data": nil,
+			"msg":  "json unmarshal error " + err.Error(),
 		})
 		return
 	}
@@ -368,23 +362,21 @@ func htlcQuery(contex *gin.Context) {
 	request.UserName = UserName
 	request.Function = Func_HTLC_Query
 
-
 	var htlc sdk.QueryHTLCArgs
 	htlc.ID = requestInfo["id"].(string)
 
 	payload, err := sdk.QueryHTLC(fabSDK, &request, htlc)
 	if err != nil {
 		contex.JSON(102, gin.H{
-			"data":nil,
+			"data":    nil,
 			"message": err.Error(),
 		})
 	} else {
 		htlc := &sdk.HTLC{}
 		err = json.Unmarshal(payload, htlc)
 		contex.JSON(200, gin.H{
-			"data":htlc,
-			"msg":"succeed",
+			"data": htlc,
+			"msg":  "succeed",
 		})
 	}
 }
-
