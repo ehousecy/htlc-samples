@@ -1,0 +1,11 @@
+htlc-eth/.vscode/
+htlc-client/node_modules/
+htlc-eth/geth1.9/
+htlc-eth/node_modules/
+htlc-fabric/sdk/config.yaml
+htlc-fabric/deploy/bin/
+htlc-fabric/deploy/channel-artifacts/
+htlc-fabric/deploy/crypto-config/
+htlc-fabric/sdk/fabricsdk
+htlc-fabric/sdk/go.sum
+htlc-fabric/sdk/nohup.out
