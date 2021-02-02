@@ -23,8 +23,7 @@ setupEnv() {
 
 
 runHTLC() {
-    #  sleep 15 seconds to allow coinbase mined some blocks and get a few ETH
-    sleep 15
+    npm run frontier
     npm run test
 }
 

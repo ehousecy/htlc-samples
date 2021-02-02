@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "frontier": "node_modules/.bin/ts-node src/service/preSetting.ts",
     "test": "node_modules/.bin/ts-node src/service/testWF.ts"
   },
   "author": "",

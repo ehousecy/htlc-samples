@@ -1,20 +1,23 @@
 import {htlcAbi, htlcCode} from './htlcContractInfo'
 import {node1} from './nodeList'
-import { address1,address2,address3,privateKey1,privateKey2,privateKey3 } from "./accountList"
-import { time } from 'console'
+import { BobAddress,AliceAddress,address3,BobPrivateKey,AlicePrivateKey,privateKey3 } from "./accountList"
 
 var Web3 = require('web3')
 var web3 = new Web3(node1)
 
+function hex2Utf8(hex:string) { 
+	return web3.utils.hexToUtf8(hex)
+}
+
 function addDefaultWallet() {
 	web3.eth.accounts.wallet.add({
-		privateKey: privateKey1,
-		address: address1
+		privateKey: BobPrivateKey,
+		address: BobAddress
 	})
 
 	web3.eth.accounts.wallet.add({
-		privateKey: privateKey2,
-		address: address2
+		privateKey: AlicePrivateKey,
+		address: AliceAddress
 	})
 
 	web3.eth.accounts.wallet.add({
@@ -31,13 +34,21 @@ function addWallet(privateKey:string, address:string) {
 	})
 }
 
+async function getBalance(_address: string) {
+	try {
+		return await web3.eth.getBalance(_address)	
+	} catch (error) {
+		return error
+	}
+}
+
 async function feeTransfer() {
 	try {
-		let val = web3.utils.toWei(web3.utils.toBN(1))
+		let val = web3.utils.toWei("0.01")
 
 		return await web3.eth.sendTransaction({
-			from: address1,
-			to: address2,
+			from: BobAddress,
+			to: AliceAddress,
 			value: val,				
 			gas: 1500000,
 			gasPrice: '300000000'
@@ -55,12 +66,11 @@ async function deployHTLC() {
 			let res = await myContract.deploy({
 				data: htlcCode
 			}).send({
-				from: address1,
+				from: BobAddress,
 				gas: 1500000,
 				gasPrice: '300000000'
 			})
 			let htlcAddress = res._address
-			console.log("new contract address: "+htlcAddress)
 			myContract = new web3.eth.Contract(htlcAbi, htlcAddress)
 			return htlcAddress
 
@@ -70,11 +80,11 @@ async function deployHTLC() {
 	}
 }
 
-async function newHTLC(receiver: string, hashLock: string, timestamp: string | number, ethAmount: string, txSender: string) {
-	console.log("receiver: "+receiver)
-	console.log("hashLock: "+hashLock)
-	console.log("txSender: "+txSender)
+function makeContract(contractAddress:string) {
+	myContract = new web3.eth.Contract(htlcAbi, contractAddress)
+}
 
+async function newHTLC(receiver: string, hashLock: string, timestamp: string | number, ethAmount: string, txSender: string) {
 	try {
 		return await myContract.methods.newHTLC(receiver,hashLock,timestamp).send({
 			from: txSender,
@@ -143,14 +153,17 @@ async function getTransactionFromBlock(txHash:string, blockNum:number) {
 
 
 export {
+	hex2Utf8,
 	addWallet,
 	feeTransfer,
 	deployHTLC,
+	makeContract,
 	newHTLC,
 	withdrawEthAssets,
 	getTransaction,
 	getTransactionFromBlock,
 	queryNewHTLCEvent,
 	getContract,
+	getBalance
 }
 
