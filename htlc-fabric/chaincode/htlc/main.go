@@ -198,7 +198,7 @@ func (h *HTLCChaincode) withdraw(stub shim.ChaincodeStubInterface, args []string
 	trans := [][]byte{[]byte("transfer"), []byte(htlc.LockAddress), []byte(htlc.Receiver), []byte(uint64ToString(htlc.Amount)), []byte(preImage)}
 	resPonse := stub.InvokeChaincode(AccountChainCodeName, trans, AccountChainCodeChannel)
 	if resPonse.Status != shim.OK {
-		return shim.Success([]byte(resPonse.Message))
+		return shim.Error(resPonse.Message)
 	}
 
 	htlc.PreImage = preImage
@@ -238,6 +238,10 @@ func (h *HTLCChaincode) refund(stub shim.ChaincodeStubInterface, args []string) 
 
 	if htlc.TimeLock > time.Now().Unix() {
 		return shim.Error("time is not expirate")
+	}
+
+	if htlc.State != HashLOCK {
+		return shim.Error("this htlc transaction state is error")
 	}
 
 	trans := [][]byte{[]byte("transfer"), []byte(htlc.LockAddress), []byte(htlc.Sender), []byte(uint64ToString(htlc.Amount)), []byte(preImage)}
