@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ARCH=$(echo "$(uname -s|tr '[:upper:]' '[:lower:]'|sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')")
-VERSION=1.9.0-52f24617
+VERSION=1.8.20-24d727b6
 BINARY_FILE=geth-${ARCH}-${VERSION}.tar.gz
 URL=https://gethstore.blob.core.windows.net/builds/${BINARY_FILE}
 
@@ -12,13 +12,13 @@ download() {
         echo "==> There was an error downloading the binary file."
         return 22
     else
-        mv geth-${ARCH}-${VERSION} geth1.9
+        mv geth-${ARCH}-${VERSION} geth1.8
         echo "==> Done."
     fi
 }
 
 enterDatadir() {
-    dir=geth
+    dir=geth1.8
     cd ${dir}
 }
 
@@ -32,8 +32,8 @@ startNode() {
     echo "--------------------Start ETH Node--------------------"
     chmod +x geth
     nohup ./geth --rpc --rpcport "8545" --rpccorsdomain "*" --datadir "./data0" --port "30303"  --networkid 100000 \
-    --allow-insecure-unlock --etherbase 0x93ee701C44f9aa98086685c3AC5810f79762202d  \
-    --mine --miner.threads=8 console 2>&1 &
+    --etherbase 0x93ee701C44f9aa98086685c3AC5810f79762202d  \
+    --mine --minerthreads=8 2>&1 &
 }
 
 # this is requried on your first try
@@ -64,3 +64,6 @@ elif [ "${MODE}" == "feeTransfer" ]; then
   setupEnv
   transferFee
 fi
+
+
+# nohup ./geth --rpc --rpcport "8545" --rpccorsdomain "*" --datadir "./data0" --port "30303"  --networkid 100000 --allow-insecure-unlock --etherbase 0x93ee701C44f9aa98086685c3AC5810f79762202d --mine --miner.threads=8 console 2>&1 &
