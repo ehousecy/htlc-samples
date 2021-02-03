@@ -32,7 +32,7 @@ startNode() {
     echo "--------------------Start ETH Node--------------------"
     chmod +x geth
     nohup ./geth --rpc --rpcport "8545" --rpccorsdomain "*" --datadir "./data0" --port "30303"  --networkid 100000 \
-    --etherbase 0x93ee701C44f9aa98086685c3AC5810f79762202d  \
+    --etherbase 0x03D08CC857191E53d87fD70981c48f36844e160c  \
     --mine --minerthreads=8 2>&1 &
 }
 
@@ -50,9 +50,6 @@ setupEnv() {
 }
 
 
-transferFee() {
-    npm run transferFee
-}
 
 MODE=$1
 if [ "${MODE}" == "download" ]; then
@@ -60,10 +57,6 @@ if [ "${MODE}" == "download" ]; then
   initDatadir
 elif [ "${MODE}" == "start" ]; then
   startNode
-elif [ "${MODE}" == "feeTransfer" ]; then
   setupEnv
-  transferFee
 fi
 
-
-# nohup ./geth --rpc --rpcport "8545" --rpccorsdomain "*" --datadir "./data0" --port "30303"  --networkid 100000 --allow-insecure-unlock --etherbase 0x93ee701C44f9aa98086685c3AC5810f79762202d --mine --miner.threads=8 console 2>&1 &

@@ -20,6 +20,7 @@ cd htlc-fabric/deploy
 if [ "${LaunchFabric}" = "true" ]; then
     chmod +x byfn.sh
     ./byfn.sh up
+    echo -e "\n"
 fi
 cd ../sdk
 chmod +x launch.sh
@@ -32,15 +33,12 @@ chmod +x launch.sh
 if [ "${DownloadGeth}" = "true" ]; then
     ./launch.sh download
 fi
+echo -e "\n"
 ./launch.sh start
+echo "sleep 15s to allow Miner to mine some ETH..."
 sleep 15
-./launch.sh feeTransfer
 cd ../
 
-# cd htlc-client
-# chmod +x runHTLC.sh
-# ./runHTLC.sh run
-
-
-
-    # nohup ./geth --rpc --rpcport "8545" --rpccorsdomain "*" --datadir "./data0" --port "30303"  --networkid 100000 --allow-insecure-unlock --etherbase 0x93ee701C44f9aa98086685c3AC5810f79762202d  --mine --minerthreads=8 console 2>&1 &
+cd htlc-client
+chmod +x runHTLC.sh
+./runHTLC.sh run

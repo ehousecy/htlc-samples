@@ -7,6 +7,7 @@ import {
     newHTLC,
     withdrawEthAssets,
     getContract,
+    getBalance
 } from '../../../htlc-eth/src/utils/utils'
 
 import {
@@ -37,16 +38,18 @@ async function createFabricMidAccount() {
   console.log("INPUT:")
   console.log("sender: ", AliceAccount)
   console.log("receiver: ", BobAccount)
-  console.log("preimage: ", hashLock+"\n") 
-  let res = await createMidAccount(AliceAccount, BobAccount, hashLock, "hash")
+  console.log("preimage: ", hex2Utf8(preimageBytesHex)+"\n") 
+  let res = await createMidAccount(AliceAccount, BobAccount, hex2Utf8(preimageBytesHex), "")
   console.log("OUTPUT:")
   midAccount = JSON.parse(JSON.stringify(res.data)).address
+  let hash = JSON.parse(JSON.stringify(res.data)).hash
   if (midAccount == '') {
     console.log("Create Mid Accountc Failed")
     console.log("Process Exit!")
     process.exit(1)
   }
   console.log("Successfully Created MidAccount: ", midAccount)
+  console.log("HashLock: ", hash)
   console.log("\n\n\n")
   return midAccount
 }
@@ -57,17 +60,16 @@ async function lockFabricAssets() {
   console.log("INPUT:")
   console.log("Alice's Account: ", AliceAccount)
   console.log("Bob's Account: ", BobAccount)
-  console.log("Amount Fabric Assets to be Locked: ", 10)
+  console.log("Amount Fabric Assets to be Locked: ", 50)
   console.log("Expiration Duration: ", (expireDuration * 1.5).toString())
   console.log("HashLock: ", hashLock)
   console.log("AlicePasswd: ", AlicePasswd)
   console.log("MidAccount: ", midAccount+"\n")
-  let res = await createHTLC(AliceAccount, BobAccount, "10", (expireDuration * 1.5 ).toString(), hashLock, AlicePasswd, midAccount)
+  let res = await createHTLC(AliceAccount, BobAccount, "50", (expireDuration * 1.5 ).toString(), hashLock, AlicePasswd, midAccount)
   console.log("OUTPUT:")
   if (res.err != '')
   {
     console.log("Lock Fabric Assets Failed: ", res.err)
-    console.log("Process Exit!")
     console.log("Process Exit!")
     process.exit(1)
   }
@@ -89,9 +91,9 @@ async function lockEth() {
     console.log("INPUT: ")
     console.log("hashlock: ", "0x"+hashLock)
     console.log("expiration timestamp: ", expireTimestamp)
-    console.log("Amount of wei(1ETH = 10^18wei) to be locked: ", '1100000000000000000')
+    console.log("Amount of ETH(1ETH = 10^18wei) to be locked: ", '1.5')
     console.log("Bob's Address: ", BobAddress+"\n")
-    let res = await newHTLC(AliceAddress, "0x"+hashLock, expireTimestamp, '1100000000000000000', BobAddress)
+    let res = await newHTLC(AliceAddress, "0x"+hashLock, expireTimestamp, '1.5', BobAddress)
     console.log("OUTPUT:")
     let blockNum = res.blockNumber
     if (blockNum == undefined || '') {
@@ -152,30 +154,33 @@ async function withdrawFabricAsset() {
   console.log("\n\n\n")
 }
 
-async function readContractAdd() {
-  let contractAddress = fs.readFile(__dirname + "/contractAddress.txt", (error: any, data: any) => {
-    if (error)
-      throw new Error(error);
-    else
-      console.log(data.toString())
-    contractAddress = data.toString()
-  })
-  console.log("contractAdd: ", contractAddress)
-  return contractAddress
+async function queryAliceBobBalance() {
+  console.log("--------------------Get Alice's Balance on Ethereum--------------------")
+  console.log("INPUT:")
+  console.log("Alice's Address: ", AliceAddress, "\n")
+  console.log("OUTPUT:")
+  console.log("Alice's Balance:", await getBalance(AliceAddress), "\n\n\n")
+  console.log("--------------------Get Bob's Balance on Ethereum--------------------")
+  console.log("INPUT:")
+  console.log("Bob's Address: ", BobAddress + "\n")
+  console.log("OUTPUT:")
+  console.log("Bob's Balance: ", await getBalance(BobAddress), "\n\n\n")
+}
+
+async function initContract() {
+  const readFile = require("util").promisify(fs.readFile);
+  let contractAddress = await readFile(__dirname + "/contractAddress.txt", "utf-8")
+  makeContract(contractAddress)
 }
 
 async function testWf() {
   await createFabricMidAccount()
   await lockFabricAssets()
   addTestWallet()
-
-  const readFile = require("util").promisify(fs.readFile);
-  let contractAddress = await readFile(__dirname+"/contractAddress.txt", "utf-8")
-  console.log(contractAddress)
-  makeContract(contractAddress)
-
+  await initContract()
   await lockEth()
   await withdrawEth()
+  await queryAliceBobBalance()
   await withdrawFabricAsset()
 }
 

@@ -4,8 +4,7 @@
   "description": "### 主要命令",
   "main": "index.js",
   "scripts": {
-    "inittsc": "node_modules/.bin/tsc --init",
-    "transferFee": "node_modules/.bin/ts-node src/service/transferFee.ts"
+    "inittsc": "node_modules/.bin/tsc --init"
   },
   "repository": {
     "type": "git",

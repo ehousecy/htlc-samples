@@ -1,6 +1,6 @@
 import {htlcAbi, htlcCode} from './htlcContractInfo'
 import {node1} from './nodeList'
-import { BobAddress,AliceAddress,address3,BobPrivateKey,AlicePrivateKey,privateKey3 } from "./accountList"
+import { BobAddress,AliceAddress,minerAddress,BobPrivateKey,AlicePrivateKey,minerPrivateKey } from "./accountList"
 
 var Web3 = require('web3')
 var web3 = new Web3(node1)
@@ -21,8 +21,8 @@ function addDefaultWallet() {
 	})
 
 	web3.eth.accounts.wallet.add({
-		privateKey: privateKey3,
-		address: address3
+		privateKey: minerPrivateKey,
+		address: minerAddress
 	})
 }
 addDefaultWallet()
@@ -36,7 +36,8 @@ function addWallet(privateKey:string, address:string) {
 
 async function getBalance(_address: string) {
 	try {
-		return await web3.eth.getBalance(_address)	
+		let res = await web3.eth.getBalance(_address)	
+		return web3.utils.fromWei(res, 'ether');
 	} catch (error) {
 		return error
 	}
@@ -47,7 +48,7 @@ async function feeTransfer() {
 		let val = web3.utils.toWei("0.01")
 
 		return await web3.eth.sendTransaction({
-			from: BobAddress,
+			from: minerAddress,
 			to: AliceAddress,
 			value: val,				
 			gas: 1500000,
@@ -57,6 +58,27 @@ async function feeTransfer() {
 		console.log(error)
 		return error
 	}
+}
+
+async function ethFaucet(_address:string, _amount:string) {
+	try {
+		web3.eth.accounts.wallet.add({
+			privateKey: minerPrivateKey,
+			address: minerAddress
+		})
+		let val = web3.utils.toWei(_amount)
+		return await web3.eth.sendTransaction({
+			from: minerAddress,
+			to: _address,
+			value: val,
+			gas: 1500000,
+			gasPrice: '300000000'
+		})
+	} catch (error) {
+		console.log(error)
+		return error
+	}
+
 }
 
 var myContract = new web3.eth.Contract(htlcAbi)
@@ -86,11 +108,12 @@ function makeContract(contractAddress:string) {
 
 async function newHTLC(receiver: string, hashLock: string, timestamp: string | number, ethAmount: string, txSender: string) {
 	try {
+		let wei = web3.utils.toWei(ethAmount, 'ether');
 		return await myContract.methods.newHTLC(receiver,hashLock,timestamp).send({
 			from: txSender,
 			gas: 3500000,
 			gasPrice: '30000',
-			value: ethAmount
+			value: wei
 		})
 	} catch (error) {
 		console.log(error)
@@ -156,6 +179,7 @@ export {
 	hex2Utf8,
 	addWallet,
 	feeTransfer,
+	ethFaucet,
 	deployHTLC,
 	makeContract,
 	newHTLC,
