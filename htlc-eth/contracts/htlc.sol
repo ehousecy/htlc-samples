@@ -1,22 +1,16 @@
 pragma solidity ^0.5.0;
 
 /**
- * @title Hashed Timelock Contracts (HTLCs) on Ethereum ETH.
+ * @title 以太坊上的哈希时间锁合约（HTLCs）。
  *
- * This contract provides a way to create and keep HTLCs for ETH.
+ * 此合约提供了创建和保存ETH的HTLC。
  *
- * See HashedTimelockERC20.sol for a contract that provides the same functions
- * for ERC20 tokens.
  *
- * Protocol:
+ * 接口：
  *
- *  1) newHTLC(receiver, hashlock, timelock) - a sender calls this to create
- *      a new HTLC and gets back a 32 byte contract id
- *  2) withdraw(htlcId, preimage) - once the receiver knows the preimage of
- *      the hashlock hash they can claim the ETH with this function
- *  3) refund() - after timelock has expired and if the receiver did not
- *      withdraw funds the sender / creator of the HTLC can get their ETH
- *      back with this function.
+ *  1） newHTLC(receiver, hashlock, timelock) - 发送者调用此合约来创建一个新的HTLC流程，返回32位字节的合约id。
+ *  2） withdraw(htlcId, preimage) - 一旦接收者知道哈希锁的原像，他们可以通过此方法来提取锁定的ETH。
+ *  3） refund() - 在时间锁过期后，接收者还没有提取锁定的资产，发送者或者HTLC的创建者可以调用此方法取回ETH。
  */
 contract HashedTimelock {
 
@@ -81,15 +75,12 @@ contract HashedTimelock {
     mapping (bytes32 => LockHTLC) contracts;
 
     /**
-     * @dev Sender sets up a new hash time lock contract depositing the ETH and
-     * providing the reciever lock terms.
+     * @dev 发送者设置哈希时间锁来存储ETH以及其锁定时间。
      *
-     * @param _receiver Receiver of the ETH.
-     * @param _hashlock A sha-2 sha256 hash hashlock.
-     * @param _timelock UNIX epoch seconds time that the lock expires at.
-     *                  Refunds can be made after this time.
-     * @return htlcId Id of the new HTLC. This is needed for subsequent
-     *                    calls.
+     * @param _receiver ETH接收者。
+     * @param _hashlock 基于sha256的哈希时间锁。
+     * @param _timelock 过期是的时间戳，在此之间之后若ETH还未被接收者提取，可以被发送者取回。
+     * @return htlcId 资产被锁定的在的HTLC的Id。之后的调用会需要。
      */
     function newHTLC(address payable _receiver, bytes32 _hashlock, uint _timelock)
         external
@@ -136,12 +127,11 @@ contract HashedTimelock {
     }
 
     /**
-     * @dev Called by the receiver once they know the preimage of the hashlock.
-     * This will transfer the locked funds to their address.
+     * @dev 接收者一旦知道时间锁原像，会调用此方法提取锁定资产。
      *
-     * @param _htlcId Id of the HTLC.
-     * @param _preimage sha256(_preimage) should equal the contract hashlock.
-     * @return bool true on success
+     * @param _htlcId HTLC的Id。
+     * @param _preimage 哈希锁原像，sha256(_preimage) 等于哈希锁。
+     * @return bool 成功返回true。
      */
     function withdraw(bytes32 _htlcId, bytes calldata _preimage)
         external
@@ -159,11 +149,10 @@ contract HashedTimelock {
     }
 
     /**
-     * @dev Called by the sender if there was no withdraw AND the time lock has
-     * expired. This will refund the contract amount.
+     * @dev 如果时间锁过期，发送者调用此方法取回锁定的资产。
      *
-     * @param _htlcId Id of HTLC to refund from.
-     * @return bool true on success
+     * @param _htlcId 锁定资产的HTLC的Id
+     * @return bool 成功返回true。
      */
     function refund(bytes32 _htlcId)
         external
@@ -179,9 +168,9 @@ contract HashedTimelock {
     }
 
     /**
-     * @dev Get contract details.
-     * @param _htlcId HTLC contract id
-     * @return All parameters in struct LockHTLC for _htlcId HTLC
+     * @dev 获取HTLC的细节。
+     * @param _htlcId HTLC的Id。
+     * @return 所有LockHTLC的参数。
      */
     function getContract(bytes32 _htlcId)
         public
@@ -215,8 +204,8 @@ contract HashedTimelock {
     }
 
     /**
-     * @dev Is there a contract with id _htlcId.
-     * @param _htlcId Id into contracts mapping.
+     * @dev 查询是否有id为_htlcId的HTLC。
+     * @param _htlcId 存储HTLC的映射的键。
      */
     function haveContract(bytes32 _htlcId)
         internal
