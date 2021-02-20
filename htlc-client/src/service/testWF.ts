@@ -23,6 +23,7 @@ import {
   withdrawFabricAssets,
   refund,
   QueryHTLC,
+  queryAccount
 } from '../utils/Ifabric'
 import { AliceAccount, AlicePasswd, BobAccount } from '../utils/accounts'
 
@@ -155,17 +156,33 @@ async function withdrawFabricAsset() {
 }
 
 async function queryAliceBobBalance() {
-  console.log("--------------------Get Alice's Balance on Ethereum--------------------")
+  console.log("--------------------Query Alice's Balance on Ethereum--------------------")
   console.log("INPUT:")
   console.log("Alice's Address: ", AliceAddress, "\n")
   console.log("OUTPUT:")
   console.log("Alice's Balance:", await getBalance(AliceAddress), "\n\n\n")
-  console.log("--------------------Get Bob's Balance on Ethereum--------------------")
+  console.log("--------------------Query Bob's Balance on Ethereum--------------------")
   console.log("INPUT:")
   console.log("Bob's Address: ", BobAddress + "\n")
   console.log("OUTPUT:")
   console.log("Bob's Balance: ", await getBalance(BobAddress), "\n\n\n")
 }
+
+async function queryAliceBobAmount() {
+  console.log("--------------------Query Alice's Amount on Fabric--------------------")
+  console.log("INPUT:")
+  console.log("Alice's Account: ", AliceAccount, "\n")
+  console.log("OUTPUT:")
+  let alice = await queryAccount(AliceAccount)
+  console.log("Alice's Amount:", JSON.parse(JSON.stringify(alice.data)).amount, "\n\n\n")
+  console.log("--------------------Query Bob's Amount on Fabric--------------------")
+  console.log("INPUT:")
+  console.log("Bob's Account: ", BobAccount + "\n")
+  console.log("OUTPUT:")
+  let bob = await queryAccount(BobAccount)
+  console.log("Bob's Amount: ", JSON.parse(JSON.stringify(bob.data)).amount, "\n\n\n")
+}
+
 
 async function initContract() {
   const readFile = require("util").promisify(fs.readFile);
@@ -182,6 +199,7 @@ async function testWf() {
   await withdrawEth()
   await queryAliceBobBalance()
   await withdrawFabricAsset()
+  await queryAliceBobAmount()
 }
 
 testWf()

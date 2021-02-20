@@ -2,24 +2,18 @@
 
 ## 下载
 ```
-$ mkdir -p $GOPATH/src/github.com/ehousecy
-$ cd $GOPATH/src/github.com/ehousecy
 $ git clone https://github.com/ehousecy/htlc-samples.git
 ```
 
-## 部署
-
-### 部署fabric网络并安装实例化相关链码
-
+## 运行
 ```
-$ cd htlc-samples/htlc-fabric/deploy
-$ ./byfn up
+// -f: 启动fabric，如无需启动网络，则为false
+// -d: 下载以太坊geth节点，如无需下载，则为false
+./run.sh -f true -d true
 ```
 
-### 部署ethereum网络并安装相关链码
-
+## 清除网络
 ```
-$ cd htlc-eth
-$ bash launch.sh download
-$ bash launch.sh start
+// 清除fabric和以太坊网络
+./clear.sh
 ```
