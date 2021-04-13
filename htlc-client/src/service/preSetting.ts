@@ -25,11 +25,11 @@ async function createAliceBobAccounts() {
 }
 
 async function recharge1K2Alice() {
-  console.log("--------------------Using Faucet to Recharge 1000 Assets 2 Alice on Fabric--------------------")
+  console.log("--------------------Using Faucet to Recharge 88000 Assets 2 Alice on Fabric--------------------")
   console.log("INPUT:")
   console.log("Alice's Account: ", AliceAccount)
-  console.log("Assets Amount: ", "1000"+"\n")
-  let res = await faucet(AliceAccount, "1000")
+  console.log("Assets Amount: ", "88000"+"\n")
+  let res = await faucet(AliceAccount, "88000")
   console.log("OUTPUT:")
   console.log(res.data, "\n\n\n")
 }

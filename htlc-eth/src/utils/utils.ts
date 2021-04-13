@@ -51,7 +51,7 @@ async function feeTransfer() {
 			from: minerAddress,
 			to: AliceAddress,
 			value: val,				
-			gas: 1500000,
+			gas: 21000,
 			gasPrice: '300000000'
 		})
 	} catch (error) {

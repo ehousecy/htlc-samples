@@ -12,6 +12,11 @@
   "devDependencies": {
     "@types/microsoft__typescript-etw": "^0.1.1",
     "@types/node": "^14.14.22",
+    "exceljs": "^3.4.0",
+    "fs": "0.0.1-security",
+    "moment": "^2.29.1",
+    "node-xls": "0.0.8",
+    "node-xlsx": "^0.16.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "ts-node": "^9.1.1",

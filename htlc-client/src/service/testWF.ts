@@ -26,6 +26,8 @@ import {
   queryAccount
 } from '../utils/Ifabric'
 import { AliceAccount, AlicePasswd, BobAccount } from '../utils/accounts'
+import { getCurrentTime, appendData } from './utils'
+import { table } from 'console'
 
 let hashLock = '0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18'
 let expireDuration:number = 20000000000
@@ -40,7 +42,13 @@ async function createFabricMidAccount() {
   console.log("sender: ", AliceAccount)
   console.log("receiver: ", BobAccount)
   console.log("preimage: ", hex2Utf8(preimageBytesHex)+"\n") 
+  let startTime = getCurrentTime()
   let res = await createMidAccount(AliceAccount, BobAccount, hex2Utf8(preimageBytesHex), "")
+  let endTime = getCurrentTime()
+  let consumeTime = endTime - startTime;
+
+  await appendData(startTime, endTime, consumeTime, "CreateMidAccount")
+
   console.log("OUTPUT:")
   midAccount = JSON.parse(JSON.stringify(res.data)).address
   let hash = JSON.parse(JSON.stringify(res.data)).hash
@@ -66,7 +74,12 @@ async function lockFabricAssets() {
   console.log("HashLock: ", hashLock)
   console.log("AlicePasswd: ", AlicePasswd)
   console.log("MidAccount: ", midAccount+"\n")
-  let res = await createHTLC(AliceAccount, BobAccount, "50", (expireDuration * 1.5 ).toString(), hashLock, AlicePasswd, midAccount)
+  let startTime = getCurrentTime()
+  let res = await createHTLC(AliceAccount, BobAccount, "50", (expireDuration * 1.5).toString(), hashLock, AlicePasswd, midAccount)
+  let endTime = getCurrentTime()
+  let consumeTime = endTime - startTime;
+
+  await appendData(startTime, endTime, consumeTime, "LockFabricAssets")
   console.log("OUTPUT:")
   if (res.err != '')
   {
@@ -94,7 +107,11 @@ async function lockEth() {
     console.log("expiration timestamp: ", expireTimestamp)
     console.log("Amount of ETH(1ETH = 10^18wei) to be locked: ", '1.5')
     console.log("Bob's Address: ", BobAddress+"\n")
-    let res = await newHTLC(AliceAddress, "0x"+hashLock, expireTimestamp, '1.5', BobAddress)
+    let startTime = getCurrentTime()
+    let res = await newHTLC(AliceAddress, "0x" + hashLock, expireTimestamp, '1.5', BobAddress)
+    let endTime = getCurrentTime()
+    let consumeTime = endTime - startTime;
+    await appendData(startTime, endTime, consumeTime, "LockEthAsset")
     console.log("OUTPUT:")
     let blockNum = res.blockNumber
     if (blockNum == undefined || '') {
@@ -126,7 +143,11 @@ async function withdrawEth() {
     console.log("ETH HTLC ID: ", htlcId)
     console.log("PreImage Bytes: ", preimageBytesHex)
     console.log("Alice's Address and Private Key\n")
+    let startTime = getCurrentTime()
     let res = await withdrawEthAssets(htlcId, preimageBytesHex, AliceAddress)
+    let endTime = getCurrentTime()
+    let consumeTime = endTime - startTime;
+    await appendData(startTime, endTime, consumeTime, "WithdrawEth")
     console.log("OUTPUT:")
     if (!res.events.LogHTLCWithdraw.returnValues.htlcId == null) { 
       console.log("Withdraw Eth Failed")
@@ -150,7 +171,11 @@ async function withdrawFabricAsset() {
   console.log("INPUT:")
   console.log("Fabric HTLC ID: ", fabricHTLCId)
   console.log("preimage: ", preimage +"\n")
+  let startTime = getCurrentTime()
   let res = await withdrawFabricAssets(fabricHTLCId, preimage)
+  let endTime = getCurrentTime()
+  let consumeTime = endTime - startTime;
+  await appendData(startTime, endTime, consumeTime, "WithdrawFabricAsset")
   console.log("OUTPUT:", res.data)
   console.log("\n\n\n")
 }
@@ -190,16 +215,22 @@ async function initContract() {
   makeContract(contractAddress)
 }
 
+
+var myDate = new Date();
+
 async function testWf() {
-  await createFabricMidAccount()
-  await lockFabricAssets()
-  addTestWallet()
-  await initContract()
-  await lockEth()
-  await withdrawEth()
-  await queryAliceBobBalance()
-  await withdrawFabricAsset()
-  await queryAliceBobAmount()
+  for (let i=0; i<10; i++) {
+    await createFabricMidAccount()
+    await lockFabricAssets()
+    addTestWallet()
+    await initContract()
+    await lockEth()
+    await withdrawEth()
+    await queryAliceBobBalance()
+    await withdrawFabricAsset()
+    await queryAliceBobAmount()
+  }
+  // writeXls(data)
 }
 
 testWf()
