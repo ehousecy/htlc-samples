@@ -216,7 +216,8 @@ func (a *AccountAssert) transfer(stub shim.ChaincodeStubInterface, args []string
 	}
 
 	if sender.Type == MidAccount {
-		if sender.TransferTo[0] != to && sender.TransferTo[1] != to {
+		// Account.TransferTo = [sender receiver]
+		if sender.TransferTo[0] != from && sender.TransferTo[1] != to {
 			return shim.Error("mid account not can transfer to other account")
 		}
 	}
