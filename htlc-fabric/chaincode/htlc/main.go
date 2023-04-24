@@ -131,7 +131,7 @@ func (h *HTLCChaincode) createHash(stub shim.ChaincodeStubInterface, args []stri
 	trans = [][]byte{[]byte("transfer"), []byte(sender), []byte(midaddress), []byte(amountStr), []byte(passwd)}
 	resPonse = stub.InvokeChaincode(AccountChainCodeName, trans, AccountChainCodeChannel)
 	if resPonse.Status != shim.OK {
-		return shim.Error("craete htlc transfer mid  account error:" + resPonse.Message)
+		return shim.Error("transfer error:" + resPonse.Message)
 	}
 
 	timeLock, err := strconv.ParseInt(timeLockStr, 10, 64)
